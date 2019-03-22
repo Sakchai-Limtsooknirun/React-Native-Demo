@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { TouchableOpacity ,StyleSheet, View, Text ,Image} from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import MyText from './MyText' ;
 
 import {Actions} from 'react-native-router-flux';
@@ -23,9 +23,7 @@ export default class TitlePage extends Component {
       </View>
     );
   }
-  clicked = () =>{
-    alert("thank2")
-  }
+
   
 
 }
