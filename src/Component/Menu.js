@@ -7,20 +7,28 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MyText from './MyText' ;
-export default class TitlePage extends Component {
-
+import { TouchableOpacity ,StyleSheet, View, Text } from 'react-native';
+import {Actions} from 'react-native-router-flux';
+export default class sun extends Component {
+  
   render() {
     return (
       <View style={styles.DemoText}>
-        <MyText message="Welcome to LipU" interval={500}></MyText>
-        
+       
+       <Text style={styles.pickerTextStyle}>MENU</Text>
+       
       </View>
     );
   }
+  clicked = () =>{
+    alert("thank2")
+  }
+  goLike = () => {
+    Actions.body()
+  }
 
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -41,8 +49,11 @@ const styles = StyleSheet.create({
   },
   DemoText: {
     flex: 1, flexDirection: "column",
-    backgroundColor: "#00B01E",
-    alignItems: "center",
-    justifyContent: 'center'
+    
+    
+  },
+  pickerTextStyle: {
+    fontSize: 18,
+    paddingLeft: 20
   }
 });
