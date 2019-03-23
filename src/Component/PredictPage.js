@@ -8,13 +8,21 @@ export default class PredictPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      selectedIndex: 2
+      selectedIndex: 1
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
   
   updateIndex (selectedIndex) {
     this.setState({selectedIndex})
+    if (selectedIndex==0) {
+      alert("Open Camera");
+    }else if (selectedIndex==2) {
+      alert("select in your device");
+
+    }else if (selectedIndex==1) {
+      alert("OK");
+    }
   }
   
   render () {
