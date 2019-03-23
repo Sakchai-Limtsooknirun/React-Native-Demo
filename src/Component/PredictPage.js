@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View  ,Text } from 'react-native';
+import { StyleSheet, View  ,Text,ImageBackground } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
-
+import Video from 'react-native-video';
+import TestVideo from '/Users/Sakchai/Desktop/React-Native-Demo/src/5810451063.mp4';
 export default class PredictPage extends Component {
   
   constructor (props) {
@@ -17,31 +18,38 @@ export default class PredictPage extends Component {
   }
   
   render () {
-    const buttons = ['Camera', 'Select Video']
+    const buttons = ['Camera','OK','Select Video']
     const { selectedIndex } = this.state
   
     return (
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('/Users/Sakchai/Desktop/React-Native-Demo/src/bg.jpg')}
+          style={styles.BG}>
+      {/* <Video style={styles.backgroundVideo} source={{uri:'https://www.youtube.com/watch?v=-fKrdi4kzCM&list=PL5EZrhJbkDFzJ_CvBwFZ8NXW6pexoTqWa&index=5'}} resizeMode="cover">
+       </Video> */}
+
       <ButtonGroup
         onPress={this.updateIndex}
         selectedIndex={selectedIndex}
         buttons={buttons}
-        containerStyle={{height: 100}}
+        containerStyle={{height: 50}}
+
       />
+      </ImageBackground>
+      </View>
     )
   }
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  
-  DemoText: {
     flex: 1, flexDirection: "column",
-    backgroundColor: "#00B01E",
-    alignItems: "center",
-    justifyContent: 'center'
+  },
+  backgroundVideo: {
+    position: 'absolute',
+    flex: 1,
+  },
+  BG: {
+    flex: 1
   }
 });
