@@ -9,7 +9,7 @@ export default class MediaPicker extends React.Component {
     super(props);
     this.state = {
       filePath: {},
-      selectedIndex: {},
+      selectedIndex: null,
     };
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -78,7 +78,7 @@ export default class MediaPicker extends React.Component {
   renderVideo() {
     return (
       <Video
-        source={require('/Users/Sakchai/Desktop/React-Native-Demo/src/5810451063.mp4')}
+        source={require('../Image/5810451063.mp4')}
         style={styles.videoComponent}
         muted={true}
         repeat={true}

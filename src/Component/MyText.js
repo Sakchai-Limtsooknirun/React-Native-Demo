@@ -35,7 +35,7 @@ export default class MyText extends Component {
           centerComponent={this.renderHeader() } 
         />
         <ImageBackground
-          source={require('/Users/Sakchai/Desktop/React-Native-Demo/src/bg.jpg')}
+          source={require('../Image/bg.jpg')}
           style={styles.BG}>
           <Image source={{ uri: 'https://cdnssl.ubergizmo.com/wp-content/uploads/2016/11/lip-reading-640x369.jpg' }} style={styles.Logo}></Image>
           <Text style={styles.TextStyle}>
