@@ -1,14 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, Platform } from 'react-native';
+import { FlatList,StyleSheet, Text, View, Button, Image, Platform ,ScrollView} from 'react-native';
 import Video from 'react-native-video';
 var ImagePicker = require('react-native-image-picker');
-import { ButtonGroup } from 'react-native-elements';
+import { ButtonGroup ,Card} from 'react-native-elements';
 import * as firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob'
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
+
 var config = {
   apiKey: "AIzaSyDt8bI_KguqGSwrCi_cXsUbZQ6Ia2fgRzE",
   authDomain: "test-564b4.firebaseapp.com",
@@ -25,9 +27,46 @@ export default class MediaPicker extends React.Component {
     this.state = {
       filePath: {},
       selectedIndex: null,
-      loading: 'waiting'
+      loading: 'waiting',
+      dataSource:null,
+      showcard: false
     };
     this.updateIndex = this.updateIndex.bind(this)
+  }
+
+  componentDidMount(){
+    console.log("Didmount")
+    firebase.database().ref('Com_Predict').on('value',(data)=>{
+      console.log(data.toJSON());
+      console.log("LoadData");
+      let items=[];
+      data.forEach((child)=>{
+        items.push({
+          _key:child.key ,
+          text:child.val().text,
+          filename:child.val().filename
+        })
+      })
+
+      this.setState({
+        dataSource: items
+      }, function(){
+        console.log(data.toJSON());
+        console.log(1111);
+        console.log(this.state.dataSource)
+      });
+        if(items.length>0){
+          this.setState({
+            showcard: true
+          })
+        }else{
+          this.setState({
+            showcard: false
+          })
+        }
+
+    })
+
   }
 
   launchLibrary = () => {
@@ -54,34 +93,34 @@ export default class MediaPicker extends React.Component {
       }
     });
   };
-//   chooseFile = () => {
-//     const options = {
-//       title: 'Video Picker', 
-//       mediaType: 'video', 
-//       storageOptions:{
-//         skipBackup:true,
-//         path:'images'
-//       }
-// };
-//     ImagePicker.showImagePicker(options, response => {
-//       console.log('Response = ', response);
-//       if (response.didCancel) {
-//         console.log('User cancelled image picker');
-//         alert('User cancelled image picker');
-//       } else if (response.error) {
-//         console.log('ImagePicker Error: ', response.error);
-//         alert('ImagePicker Error: ' + response.error);
-//       } else if (response.customButton) {
-//         console.log('User tapped custom button: ', response.customButton);
-//         alert(response.customButton);
-//       } else {
-//         let source = response;
-//         this.setState({
-//           filePath: source,
-//         });
-//       }
-//     });
-//   };
+  chooseFile = () => {
+    const options = {
+      title: 'Video Picker', 
+      mediaType: 'video', 
+      storageOptions:{
+        skipBackup:true,
+        path:'images'
+      }
+};
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+        alert('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+        alert('ImagePicker Error: ' + response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        this.setState({
+          filePath: source,
+        });
+      }
+    });
+  };
 
   launchCamera = () => {
     var options = {
@@ -131,14 +170,24 @@ export default class MediaPicker extends React.Component {
             return imageRef.put(blob, { contentType: mime});
          })
          .then(() => {
+
           this.setState({
             loading: 'success' 
+            
           });
+          
             uploadBlob.close()
             return imageRef.getDownloadURL();
          })
          .then(url => {
             console.log(url);
+            console.log(fileName)
+            firebase.database().ref('Wait_Predict/').push({
+              id: 1,
+              filename:fileName,
+              url:url
+              })
+              console.log("DB success")
          })
          .catch(error => {
             console.log(error)
@@ -159,37 +208,30 @@ export default class MediaPicker extends React.Component {
     
   }
 
-  renderVideo() {
-    return (
-      <Video
-        source={require('../Image/5810451063.mp4')}
-        style={styles.videoComponent}
-        muted={true}
-        repeat={true}
-        resizeMode={"cover"}
-        volume={1.0}
-        rate={1.0}
-        ignoreSilentSwitch={"obey"}
-      />
-    )
-  }
+
+
+  // renderVideo() {
+  //   return (
+  //     <Video
+  //       source={require('../Image/5810451063.mp4')}
+  //       style={styles.videoComponent}
+  //       muted={true}
+  //       repeat={true}
+  //       resizeMode={"cover"}
+  //       volume={1.0}
+  //       rate={1.0}
+  //       ignoreSilentSwitch={"obey"}
+  //     />
+  //   )
+  // }
   render() {
     const buttons = ['CAMERA', 'CHOOSE YOUR VIDEO','UPLOAD']
     const { selectedIndex } = this.state
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.container}>
         <Text></Text>
-          {/* <Video
-        source={require('/storage/emulated/0/DCIM/Camera/VID_20190324_015352')}
-        style={{ width: 250, height: 250 }}
-        muted={true}
-        repeat={true}
-        resizeMode={"cover"}
-        volume={1.0}
-        rate={1.0}
-        ignoreSilentSwitch={"obey"}
-        /> */}
+
           
           <Image
             source={{ uri: this.state.filePath.uri }}
@@ -197,18 +239,17 @@ export default class MediaPicker extends React.Component {
           />
           <Text style={styles.TextStyle}>VIDEO TO PREDICTING</Text>
           <Text></Text>
-          <ButtonGroup
+          <ButtonGroup style={{fontSize : 20}}
             onPress={this.updateIndex}
             selectedIndex={selectedIndex}
             buttons={buttons}
-            containerStyle={{ height: 50 }}
+            containerStyle={{ height: 40 }}
 
           />
           <Text style={{
             alignItems: 'center', justifyContent: "center",
             alignSelf: 'center'
           }}>URI = {this.state.filePath.uri}</Text>
-          <Text></Text>
           <Text style={{
             justifyContent: "center",
             alignItems: 'center',
@@ -219,9 +260,23 @@ export default class MediaPicker extends React.Component {
             alignItems: 'center',
             alignSelf: 'center'
           }}>Loading : +{this.state.loading}</Text>
+         
+           { this.state.showcard ? 
+
+            <Card  onFocus={true} title='out put'  >
+          
+            <FlatList
+              data={this.state.dataSource}
+              renderItem={({item}) => <Text>{item.filename} , {item.text}</Text>}
+              keyExtractor={(item, index) => index.toString()}
+              /> 
+
+          </Card>
+          :null}
+
 
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -239,16 +294,16 @@ const styles = StyleSheet.create({
   },
   videoComponent: {
     width: 300,
-    height: 300,
+    height: 200,
     justifyContent: "center",
     alignItems: 'center',
     alignSelf: 'center'
   },
   TextStyle: {
-    width: 500,
+    width: 350,
     color: '#fff',
     textAlign: 'center',
-    fontSize: 40,
+    fontSize: 25,
     marginTop: 10,
   }
 });

@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
 import { Button, Header } from 'react-native-elements';
 import MyHeader from './Header'
+import { Dimensions } from "react-native";
+
+var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height
+
 export default class MyText extends Component {
   constructor(props) {
     super(props)
@@ -54,11 +59,11 @@ export default class MyText extends Component {
 const styles = StyleSheet.create({
 
   TextStyle: {
-    width: 500,
+    width: width,
     color: '#fff',
     textAlign: 'center',
-    fontSize: 50,
-    marginTop: 10,
+    fontSize: 30,
+    padding : 20,
   },
   container: {
     flex: 1,

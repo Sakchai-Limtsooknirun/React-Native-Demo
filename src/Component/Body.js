@@ -9,8 +9,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View} from 'react-native';
 import MyText from './MyText' ;
-
 import {Actions} from 'react-native-router-flux';
+
 
 export default class TitlePage extends Component {
   
